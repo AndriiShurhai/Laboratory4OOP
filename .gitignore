@@ -1,0 +1,75 @@
+# Visual Studio workspace & user files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.rsuser
+
+# Build results
+[Bb]in/
+[Oo]bj/
+artifacts/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Visual Studio for Mac
+.vscode/
+
+# Mono auto-generated files
+*.pidb
+*.userprefs
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Tiled map editor cache (if you’re using Tiled)
+*.tmx~
+*.tsx~
+*.bak
+
+# IIS Express / SQL LocalDB
+/.vs/
+App_Data/
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# Uncomment if you have package directories under src
+# !**/packages/build/
+
+# Azure build output
+csx/
+*.build.csdef
+
+# DotCover
+*.dotCover
+
+# Microsoft Fakes
+FakesAssemblies/
+
+# MSTest test results
+TestResults/
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# BenchmarkDotNet artifacts
+BenchmarkDotNet.Artifacts/
+
+# EF migrations
+**/Migrations/*.Designer.cs
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
