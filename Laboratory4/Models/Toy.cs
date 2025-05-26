@@ -37,7 +37,7 @@ namespace Laboratory4.Models
             get => _manufacturer;
             set
             {
-                if (!string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
                     throw new ArgumentNullException("Manufacturer cannot be empty");
                 }

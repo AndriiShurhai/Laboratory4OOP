@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Laboratory4
+namespace Laboratory4.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
