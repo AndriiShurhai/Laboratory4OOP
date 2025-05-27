@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Laboratory4.Models
 {
-    public class ToyBatch
+    public class ToyBatch : Helpers.ObservableObject
     {
         private Toy _toy;
         private DateTime _deliveryDate;
@@ -24,13 +24,13 @@ namespace Laboratory4.Models
         public Toy Toy
         {
             get => _toy;
-            set => _toy = value ?? throw new ArgumentNullException(nameof(value));
+            set => SetProperty(ref _toy, value ?? throw new ArgumentNullException(nameof(value)));
         }
 
         public DateTime DeliveryDate
         {
             get => _deliveryDate;
-            set => _deliveryDate = value;
+            set => SetProperty(ref _deliveryDate, value);
         }
 
         public decimal Price
@@ -42,7 +42,7 @@ namespace Laboratory4.Models
                 {
                     throw new ArgumentOutOfRangeException(nameof(value), "Price cannot be negative");
                 }
-                _price = value;
+                SetProperty(ref _price, value);
             }
         }
         public int Quantity
@@ -54,7 +54,7 @@ namespace Laboratory4.Models
                 {
                     throw new ArgumentOutOfRangeException(nameof(value), "Quantity cannot be negative");
                 }
-                _quantity = value;
+                SetProperty(ref _quantity, value);  
             }
         }
 

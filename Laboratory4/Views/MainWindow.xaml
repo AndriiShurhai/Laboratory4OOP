@@ -3,32 +3,68 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Laboratory4" xmlns:vm="clr-namespace:Laboratory4.ViewModels"
+        xmlns:local="clr-namespace:Laboratory4" 
+        xmlns:vm="clr-namespace:Laboratory4.ViewModels"
         mc:Ignorable="d"
-        Title="Toy Store" Height="450" Width="800">
+        Title="Toy Store Management" Height="500" Width="900"
+        WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
     <DockPanel>
-        <ToolBar DockPanel.Dock="Top">
-            <Button Content="Add Toy" Command="{Binding AddToyCommand}" />
-            <Button Content="Add Batch" Command="{Binding AddBatchCommand}" />
-            <Button Content="Sell One" Command="{Binding SellOneCommand}" CommandParameter="{Binding SelectedItem, ElementName=dgBatches}" />
+        <ToolBar DockPanel.Dock="Top" Height="40">
+            <Button Content="Add Toy" Command="{Binding AddToyCommand}" 
+                    ToolTip="Add a new toy type" Padding="10,5" Margin="2" />
+            <Separator />
+            <Button Content="Add Batch" Command="{Binding AddBatchCommand}" 
+                    ToolTip="Add a new batch of toys" Padding="10,5" Margin="2" />
+            <Separator />
+            <Button Content="Sell One" Command="{Binding SellOneCommand}" 
+                    CommandParameter="{Binding SelectedItem, ElementName=dgBatches}"
+                    ToolTip="Sell one item from selected batch" Padding="10,5" Margin="2" />
         </ToolBar>
+
+        <StatusBar DockPanel.Dock="Bottom" Height="25">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StoreStatus}" FontWeight="SemiBold" />
+            </StatusBarItem>
+        </StatusBar>
+
         <DataGrid x:Name="dgBatches"
                   ItemsSource="{Binding Batches}"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="False">
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  SelectionMode="Single"
+                  GridLinesVisibility="Horizontal"
+                  AlternatingRowBackground="LightGray"
+                  HeadersVisibility="Column">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Toy" Binding="{Binding Toy.Name}" />
-                <DataGridTextColumn Header="Class" Binding="{Binding Toy.Classification}" />
-                <DataGridTextColumn Header="Delivery Date" Binding="{Binding DeliveryDate, StringFormat=d}" />
-                <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
-                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" />
+                <DataGridTextColumn Header="Toy Name" Binding="{Binding Toy.Name}" 
+                                    Width="*" MinWidth="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Manufacturer" Binding="{Binding Toy.Manufacturer}" 
+                                    Width="*" MinWidth="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Classification" Binding="{Binding Toy.Classification}" 
+                                    Width="100" IsReadOnly="True" />
+                <DataGridTextColumn Header="Delivery Date" Binding="{Binding DeliveryDate, StringFormat=d}" 
+                                    Width="100" IsReadOnly="True" />
+                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=C}" 
+                                    Width="80" IsReadOnly="True" />
+                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" 
+                                    Width="70" IsReadOnly="True" />
+                <DataGridTextColumn Header="Total Value" 
+                                    Width="90" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding StringFormat="{}{0:C}">
+                            <Binding Path="Price" />
+                            <Binding Path="Quantity" />
+                            <MultiBinding.Converter>
+                                <local:MultiplyConverter />
+                            </MultiBinding.Converter>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <StatusBar DockPanel.Dock="Bottom">
-            <TextBlock Text="{Binding StoreStatus}" />
-        </StatusBar>
     </DockPanel>
 </Window>
