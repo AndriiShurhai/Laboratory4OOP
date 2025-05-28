@@ -19,6 +19,9 @@ namespace Laboratory4.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
+
+        private const string DataFile = "store.json";
+
         private string _storeStatus;
         private readonly ObservableCollection<Toy> _availableToys;
 
@@ -36,9 +39,13 @@ namespace Laboratory4.ViewModels
 
         public MainViewModel()
         {
-            Store = new ToyStore();
-            Batches = new ObservableCollection<ToyBatch>(Store.Batches);
             _availableToys = new ObservableCollection<Toy>();
+
+            Store = LoadStore();
+            Batches = new ObservableCollection<ToyBatch>(Store.Batches);
+
+            foreach (var batch in Batches)
+                batch.PropertyChanged += OnBatchPropertyChanged;
 
             Batches.CollectionChanged += OnBatchesChanged;
 
@@ -161,5 +168,100 @@ namespace Laboratory4.ViewModels
                 MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private ToyStore LoadStore()
+        {
+            if (!File.Exists(DataFile))
+            {
+                return new ToyStore();
+            }
+
+            try
+            {
+                var json = File.ReadAllText(DataFile);
+                var dto = JsonSerializer.Deserialize<ToyStoreDTO>(json)!;
+
+                foreach (var t in dto.Toys)
+                    _availableToys.Add(new Toy(t.Name, t.Manufacturer, t.Classification));
+
+                var store = new ToyStore();
+                foreach (var b in dto.Batches)
+                {
+                    var toy = new Toy
+                        (
+                        b.Toy.Name,
+                        b.Toy.Manufacturer,
+                        b.Toy.Classification
+                        );
+
+                    var batch = new ToyBatch
+                        (
+                        toy,
+                        b.DeliveryDate,
+                        b.Price,
+                        b.Quantity
+                        );
+
+                    store.AddBatch(batch);
+                }
+
+                return store;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load saved data: {ex.Message}", "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return new ToyStore();
+            }
+        }
+
+        public void SaveStore()
+        {
+            try
+            {
+                var dto = new ToyStoreDTO
+                {
+                    StoreNumber = Store.StoreNumber
+                };
+
+                foreach (var b in _availableToys)
+                {
+                    var dtoToy = new ToyDTO
+                    {
+                        Name = b.Name,
+                        Manufacturer = b.Manufacturer,
+                        Classification = b.Classification,
+                    };
+                    dto.Toys.Add(dtoToy);
+                }
+
+                foreach (var b in Store.Batches)
+                {
+                    var dtoToy = new ToyDTO
+                    {
+                        Name = b.Toy.Name,
+                        Manufacturer = b.Toy.Manufacturer,
+                        Classification = b.Toy.Classification,
+                    };
+                    var dtoBatch = new ToyBatchDTO
+                    {
+                        Toy = dtoToy,
+                        DeliveryDate = b.DeliveryDate,
+                        Price = b.Price,
+                        Quantity = b.Quantity
+                    };
+
+                    dto.Batches.Add(dtoBatch);
+                }
+
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                File.WriteAllText(DataFile, JsonSerializer.Serialize(dto, options));
+                MessageBox.Show("Store Saved");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Failed to save data: {ex.Message}", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
     }
 }

@@ -9,6 +9,7 @@ namespace Laboratory4.DTOs
     public class ToyStoreDTO
     {
         public int StoreNumber { get; set; }
+        public List<ToyDTO> Toys { get; set; } = new List<ToyDTO>();
         public List<ToyBatchDTO> Batches { get; set; } = new List<ToyBatchDTO>();   
     }
 }
