@@ -2,6 +2,7 @@
 using Laboratory4.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows;
 
 namespace Laboratory4.Views
@@ -48,6 +49,21 @@ namespace Laboratory4.Views
             DataContext = this;
         }
 
+        private bool ValidateToy(Toy toy)
+        {
+            var context = new ValidationContext(toy);
+            var results = new List<ValidationResult>();
+            bool isValid = Validator.TryValidateObject(toy, context, results, true);
+
+            if (!isValid)
+            {
+                string errorMessage = string.Join("\n", results.Select(r => r.ErrorMessage));
+                MessageBox.Show(errorMessage, "Помилка валідації", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            return isValid;
+        }
+
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -55,21 +71,25 @@ namespace Laboratory4.Views
                 string toyName = txtName.Text?.Trim();
                 string manufacturer = txtManufacturer.Text?.Trim();
 
-                if (string.IsNullOrWhiteSpace(toyName))
-                {
-                    MessageBox.Show("Please enter a toy name.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    txtName.Focus();
-                    return;
-                }
+                //if (string.IsNullOrWhiteSpace(toyName))
+                //{
+                //    MessageBox.Show("Please enter a toy name.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                //    txtName.Focus();
+                //    return;
+                //}
 
-                if (string.IsNullOrWhiteSpace(manufacturer))
-                {
-                    MessageBox.Show("Please enter a manufacturer.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    txtManufacturer.Focus();
-                    return;
-                }
+                //if (string.IsNullOrWhiteSpace(manufacturer))
+                //{
+                //    MessageBox.Show("Please enter a manufacturer.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                //    txtManufacturer.Focus();
+                //    return;
+                //}
 
                 CreatedToy = new Toy(toyName, manufacturer, Classification);
+                if (!ValidateToy(CreatedToy))
+                {
+                    return;
+                }
                 DialogResult = true;
             }
             catch (Exception ex)

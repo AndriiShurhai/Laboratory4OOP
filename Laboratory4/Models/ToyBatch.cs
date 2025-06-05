@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Laboratory4.Models
 {
@@ -33,6 +34,7 @@ namespace Laboratory4.Models
             set => SetProperty(ref _deliveryDate, value);
         }
 
+        [Range(0, double.MaxValue, ErrorMessage = "Price cannot be negative, (annotation)")]
         public decimal Price
         {
             get => _price;
@@ -45,6 +47,8 @@ namespace Laboratory4.Models
                 SetProperty(ref _price, value);
             }
         }
+
+        [Range(1, double.MaxValue, ErrorMessage = "Quantity cannot be negative, (annotation)")]
         public int Quantity
         {
             get => _quantity;

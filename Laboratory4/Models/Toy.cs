@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Laboratory4.Models
             Classification = classification;
         }
 
+        [Required(ErrorMessage = "Name cannot be empty (annotation)")]
         public string Name
         {
             get => _name;
@@ -32,6 +34,7 @@ namespace Laboratory4.Models
             }
         }
 
+        [Required(ErrorMessage = "Manufacturer cannot be empty (annotation)")]
         public string Manufacturer
         {
             get => _manufacturer;
